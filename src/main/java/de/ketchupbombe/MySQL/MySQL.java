@@ -24,8 +24,10 @@ public class MySQL {
         try {
             if (!isConnected()) {
                 CON = DriverManager.getConnection("jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?autoreconnect=true", USERNAME, PASSWORD);
+                System.out.println("[FFA] connected!");
             }
         } catch (SQLException e) {
+            System.out.println("[FFA] Could not connect to MySQL!");
         }
     }
 
@@ -84,11 +86,11 @@ public class MySQL {
      * Setup the MySQL data
      */
     public static void setUp() {
-        HOST = "localhost";
-        DATABASE = "FFA";
-        USERNAME = "admin";
-        PASSWORD = "lukas";
-        PORT = 3306;
+        HOST = FFA.getInstance().getConfig().getString("MySQL.host");
+        DATABASE = FFA.getInstance().getConfig().getString("MySQL.database");
+        USERNAME = FFA.getInstance().getConfig().getString("MySQL.username");
+        PASSWORD = FFA.getInstance().getConfig().getString("MySQL.password");
+        PORT = FFA.getInstance().getConfig().getInt("MySQL.port");
 
     }
 

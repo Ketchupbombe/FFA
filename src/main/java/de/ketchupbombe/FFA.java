@@ -1,6 +1,7 @@
 package de.ketchupbombe;
 
 import de.ketchupbombe.MySQL.MySQL;
+import de.ketchupbombe.manager.ConfigManager;
 import de.ketchupbombe.manager.MessagesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,7 @@ public class FFA extends JavaPlugin {
     private Executor executor = Executors.newCachedThreadPool();
     private static FFA INSTANCE;
     private MessagesManager messagesManager;
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
@@ -23,11 +25,14 @@ public class FFA extends JavaPlugin {
         INSTANCE = this;
 
         //connect to MySQL
+        MySQL.setUp();
         MySQL.connect();
 
         //create configs
         messagesManager = new MessagesManager();
         messagesManager.createMessagesConfig();
+        configManager = new ConfigManager();
+        configManager.setUpConfig();
     }
 
     @Override
@@ -38,6 +43,7 @@ public class FFA extends JavaPlugin {
 
     /**
      * @return FFA-class
+     * @see FFA
      */
     public static FFA getInstance() {
         return INSTANCE;
@@ -47,6 +53,7 @@ public class FFA extends JavaPlugin {
      * To make things async.
      *
      * @return new Executor
+     * @see Executor
      */
     public Executor getExecutor() {
         return executor;
@@ -56,8 +63,19 @@ public class FFA extends JavaPlugin {
      * To manage all messages
      *
      * @return new MessagesManager
+     * @see MessagesManager
      */
     public MessagesManager getMessagesManager() {
         return messagesManager;
+    }
+
+    /**
+     * To manage default config
+     *
+     * @return new ConfigManager
+     * @see ConfigManager
+     */
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 }
