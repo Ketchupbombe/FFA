@@ -3,6 +3,7 @@ package de.ketchupbombe;
 import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.manager.ConfigManager;
 import de.ketchupbombe.manager.MessagesManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.Executor;
@@ -33,12 +34,18 @@ public class FFA extends JavaPlugin {
         messagesManager.createMessagesConfig();
         configManager = new ConfigManager();
         configManager.setUpConfig();
+
+        //send enable-message
+        Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("enable"));
     }
 
     @Override
     public void onDisable() {
         //disconnect from MySQL
         MySQL.close();
+
+        //send disable-message
+        Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("disable"));
     }
 
     /**

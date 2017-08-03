@@ -1,6 +1,7 @@
 package de.ketchupbombe.manager;
 
 import de.ketchupbombe.FFA;
+import de.ketchupbombe.utils.variables;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -23,6 +24,10 @@ public class MessagesManager {
         this.file = new File(FFA.getInstance().getDataFolder(), "Messages.yml");
         this.cfg = YamlConfiguration.loadConfiguration(file);
 
+        this.cfg.addDefault("prefix", "&9FFA &8| &7");
+        this.cfg.addDefault("noPermission", "%prefix%&cNo Permission!");
+        this.cfg.addDefault("enable", "%prefix%&aenabled!");
+        this.cfg.addDefault("disable", "%prefix%&cdisabled!");
         saveFile();
     }
 
@@ -54,7 +59,9 @@ public class MessagesManager {
      * @return value of path
      */
     public String getMessage(String path) {
-        return cfg.getString(path);
+        return cfg.getString(path)
+                .replaceAll("%prefix%", variables.getPrefix())
+                .replaceAll("&", "§");
     }
 
     /**
