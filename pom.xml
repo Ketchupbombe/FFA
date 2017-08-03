@@ -38,9 +38,9 @@
         </plugins>
         <resources>
             <resource>
-                <directory>/src/main/resources</directory>
+                <directory>src/main/resources</directory>
                 <includes>
-                    <include>*.yml</include>
+                    <include>plugin.yml</include>
                 </includes>
             </resource>
         </resources>
