@@ -41,6 +41,7 @@ public class MessagesManager {
         try {
             cfg.save(file);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -51,7 +52,9 @@ public class MessagesManager {
      * @param value Message
      */
     public void addMessage(String path, String value) {
-        cfg.set(path, value);
+        if (!isPathExist(path)) {
+            cfg.set(path, value);
+        }
     }
 
     /**
