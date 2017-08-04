@@ -1,6 +1,7 @@
 package de.ketchupbombe;
 
 import de.ketchupbombe.MySQL.MySQL;
+import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.manager.ConfigManager;
 import de.ketchupbombe.manager.MessagesManager;
 import org.bukkit.Bukkit;
@@ -25,9 +26,10 @@ public class FFA extends JavaPlugin {
         //set instance
         INSTANCE = this;
 
-        //connect to MySQL
+        //MySQL
         MySQL.setUp();
         MySQL.connect();
+        createMySQLTables();
 
         //create configs
         messagesManager = new MessagesManager();
@@ -84,5 +86,13 @@ public class FFA extends JavaPlugin {
      */
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    /**
+     * Create standart MySQL-tables in onEnable
+     */
+    private void createMySQLTables() {
+        MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.LOCATION.getTablename() + " (type VARCHAR(64), worldname VARCHAR(64), location VARCHAR(255))");
+        MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.MAPS.getTablename() + " (name VARCHAR(64), author VARCHAR(64), online VARCHAR(7))");
     }
 }
