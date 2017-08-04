@@ -3,6 +3,7 @@ package de.ketchupbombe;
 import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.manager.ConfigManager;
+import de.ketchupbombe.manager.MapManager;
 import de.ketchupbombe.manager.MessagesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,7 @@ public class FFA extends JavaPlugin {
     private static FFA INSTANCE;
     private MessagesManager messagesManager;
     private ConfigManager configManager;
+    private MapManager mapManager;
 
     @Override
     public void onEnable() {
@@ -36,6 +38,8 @@ public class FFA extends JavaPlugin {
         messagesManager.createMessagesConfig();
         configManager = new ConfigManager();
         configManager.setUpConfig();
+        mapManager = new MapManager();
+        mapManager.updateMapCache();
 
         //send enable-message
         Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("enable"));
@@ -89,10 +93,20 @@ public class FFA extends JavaPlugin {
     }
 
     /**
+     * To manage all Maps
+     *
+     * @return new MapManager
+     * @see MapManager
+     */
+    public MapManager getMapManager() {
+        return mapManager;
+    }
+
+    /**
      * Create standart MySQL-tables in onEnable
      */
     private void createMySQLTables() {
         MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.LOCATION.getTablename() + " (type VARCHAR(64), worldname VARCHAR(64), location VARCHAR(255))");
-        MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.MAPS.getTablename() + " (name VARCHAR(64), author VARCHAR(64), online VARCHAR(7))");
+        MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.MAPS.getTablename() + " (mapname VARCHAR(64), author VARCHAR(64), online VARCHAR(7))");
     }
 }
