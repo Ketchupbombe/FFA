@@ -9,6 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author Ketchupbombe
+ * @version 1.0
+ */
 public class MapManager {
 
     private String currentMap = null;
@@ -36,11 +40,11 @@ public class MapManager {
     }
 
     /**
-     * Insert a new mao in database
+     * Insert a new map in database
      *
      * @param mapname name of the map
      * @param author  author of the map
-     * @param online  true/false -> should the map be in mapchange
+     * @param online  true/false - should the map be in mapchange
      */
     public void createNewMap(String mapname, String author, boolean online) {
         if (!isMapExist(mapname)) {

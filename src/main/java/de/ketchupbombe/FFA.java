@@ -1,8 +1,10 @@
 package de.ketchupbombe;
 
 import de.ketchupbombe.MySQL.MySQL;
+import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.manager.ConfigManager;
+import de.ketchupbombe.manager.LocationManager;
 import de.ketchupbombe.manager.MapManager;
 import de.ketchupbombe.manager.MessagesManager;
 import org.bukkit.Bukkit;
@@ -22,6 +24,7 @@ public class FFA extends JavaPlugin {
     private MessagesManager messagesManager;
     private ConfigManager configManager;
     private MapManager mapManager;
+    private LocationManager locationManager;
 
     @Override
     public void onEnable() {
@@ -38,8 +41,14 @@ public class FFA extends JavaPlugin {
         messagesManager.createMessagesConfig();
         configManager = new ConfigManager();
         configManager.setUpConfig();
+
+        //register managers
         mapManager = new MapManager();
         mapManager.updateMapCache();
+        locationManager = new LocationManager();
+        locationManager.saveLocation(LocationType.SPAWN, Bukkit.getWorld("world").getSpawnLocation(), "world");
+
+        System.out.println(locationManager.isWorldLoaded("world"));
 
         //send enable-message
         Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("enable"));
@@ -100,6 +109,16 @@ public class FFA extends JavaPlugin {
      */
     public MapManager getMapManager() {
         return mapManager;
+    }
+
+    /**
+     * To manage all Locations
+     *
+     * @return new LocationManager
+     * @see LocationManager
+     */
+    public LocationManager getLocationManager() {
+        return locationManager;
     }
 
     /**
