@@ -3,11 +3,9 @@ package de.ketchupbombe;
 import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
-import de.ketchupbombe.manager.ConfigManager;
-import de.ketchupbombe.manager.LocationManager;
-import de.ketchupbombe.manager.MapManager;
-import de.ketchupbombe.manager.MessagesManager;
+import de.ketchupbombe.manager.*;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.Executor;
@@ -25,6 +23,7 @@ public class FFA extends JavaPlugin {
     private ConfigManager configManager;
     private MapManager mapManager;
     private LocationManager locationManager;
+    private MapChangeManager mapChangeManager;
 
     @Override
     public void onEnable() {
@@ -46,10 +45,20 @@ public class FFA extends JavaPlugin {
         mapManager = new MapManager();
         mapManager.updateMapCache();
         locationManager = new LocationManager();
-        locationManager.saveLocation(LocationType.SPAWN, Bukkit.getWorld("world").getSpawnLocation(), "world");
-
-        System.out.println(locationManager.isWorldLoaded("world"));
-
+        mapChangeManager = new MapChangeManager();
+        for (World world : Bukkit.getWorlds()) {
+            if (!mapManager.isMapExist(world.getName())) {
+                mapManager.createNewMap(world.getName(), null, true);
+                locationManager.saveLocation(LocationType.SPAWN, world.getSpawnLocation(), world.getName());
+            }
+        }
+        mapManager.updateMapCache();
+        if (mapChangeManager.isMapChangeEnabled()) {
+            mapChangeManager.ChangeMapTo(mapManager.getRandomMap());
+            mapChangeManager.startMapChangeScheduler();
+        } else {
+            mapChangeManager.ChangeMapTo(mapManager.getDefaultMap());
+        }
         //send enable-message
         Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("enable"));
     }
@@ -119,6 +128,16 @@ public class FFA extends JavaPlugin {
      */
     public LocationManager getLocationManager() {
         return locationManager;
+    }
+
+    /**
+     * To manage MapChange
+     *
+     * @return new MapChangeManager
+     * @see MapChangeManager
+     */
+    public MapChangeManager getMapChangeManager() {
+        return mapChangeManager;
     }
 
     /**

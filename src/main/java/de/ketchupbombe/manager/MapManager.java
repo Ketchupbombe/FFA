@@ -198,4 +198,12 @@ public class MapManager {
         return getOnlineMapCache().contains(mapname);
     }
 
+    /**
+     * Get default map which is in config
+     *
+     * @return
+     */
+    public String getDefaultMap() {
+        return FFA.getInstance().getConfig().getString("MapChange.defaultMap");
+    }
 }
