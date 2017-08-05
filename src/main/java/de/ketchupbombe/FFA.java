@@ -53,6 +53,7 @@ public class FFA extends JavaPlugin {
             }
         }
         mapManager.updateMapCache();
+        //setup map
         if (mapChangeManager.isMapChangeEnabled()) {
             mapChangeManager.ChangeMapTo(mapManager.getRandomMap());
             mapChangeManager.startMapChangeScheduler();
