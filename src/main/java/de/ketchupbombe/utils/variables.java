@@ -1,16 +1,14 @@
 package de.ketchupbombe.utils;
 
-import de.ketchupbombe.FFA;
-
 /**
  * @author Ketchupbombe
  * @version 1.0
  */
 public class variables {
 
-    private static String PREFIX = FFA.getInstance().getMessagesManager().getMessage("prefix");
-    private static String NOPERMISSION = FFA.getInstance().getMessagesManager().getMessage("noPermission");
-    private static String NOCONSOLE = FFA.getInstance().getMessagesManager().getMessage("noConsole");
+    private static final String PREFIX = "§9FFA §8| §7";
+    private static String NOPERMISSION = PREFIX + "§cNo Permission!";
+    private static String NOCONSOLE = PREFIX + "§cThis is not available for consoles!";
 
     /**
      * In front of each message

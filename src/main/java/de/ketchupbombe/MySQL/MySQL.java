@@ -76,7 +76,9 @@ public class MySQL {
      */
     public static ResultSet getResult(String qry) {
         try {
-            return CON.createStatement().executeQuery(qry);
+            if (isConnected()) {
+                return CON.createStatement().executeQuery(qry);
+            }
         } catch (SQLException e) {
         }
         return null;

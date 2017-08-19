@@ -3,7 +3,11 @@ package de.ketchupbombe;
 import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
-import de.ketchupbombe.manager.*;
+import de.ketchupbombe.manager.ConfigManager;
+import de.ketchupbombe.manager.LocationManager;
+import de.ketchupbombe.manager.MapChangeManager;
+import de.ketchupbombe.manager.MapManager;
+import de.ketchupbombe.utils.variables;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +23,6 @@ public class FFA extends JavaPlugin {
 
     private Executor executor = Executors.newCachedThreadPool();
     private static FFA INSTANCE;
-    private MessagesManager messagesManager;
     private ConfigManager configManager;
     private MapManager mapManager;
     private LocationManager locationManager;
@@ -36,8 +39,6 @@ public class FFA extends JavaPlugin {
         createMySQLTables();
 
         //create configs
-        messagesManager = new MessagesManager();
-        messagesManager.createMessagesConfig();
         configManager = new ConfigManager();
         configManager.setUpConfig();
 
@@ -61,7 +62,7 @@ public class FFA extends JavaPlugin {
             mapChangeManager.ChangeMapTo(mapManager.getDefaultMap());
         }
         //send enable-message
-        Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("enable"));
+        Bukkit.getConsoleSender().sendMessage(variables.getPrefix() + "§aenabled!");
     }
 
     @Override
@@ -70,7 +71,7 @@ public class FFA extends JavaPlugin {
         MySQL.close();
 
         //send disable-message
-        Bukkit.getConsoleSender().sendMessage(getMessagesManager().getMessage("disable"));
+        Bukkit.getConsoleSender().sendMessage(variables.getPrefix() + "§cdisabled!");
     }
 
     /**
@@ -89,16 +90,6 @@ public class FFA extends JavaPlugin {
      */
     public Executor getExecutor() {
         return executor;
-    }
-
-    /**
-     * To manage all messages
-     *
-     * @return new MessagesManager
-     * @see MessagesManager
-     */
-    public MessagesManager getMessagesManager() {
-        return messagesManager;
     }
 
     /**
