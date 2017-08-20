@@ -20,7 +20,7 @@ public class MapChangeManager {
      * @param mapname map to switch
      */
     public void ChangeMapTo(String mapname) {
-        if (!ffa.getMapManager().getOnlineMapCache().isEmpty() && Bukkit.getOnlinePlayers().size() != 0) {
+        if (!ffa.getMapManager().getOnlineMapCache().isEmpty()) {
             if (followingMap != null) {
                 ffa.getMapManager().setCurrentMap(getFollowingMap());
                 for (Player all : Bukkit.getOnlinePlayers()) {
@@ -32,15 +32,13 @@ public class MapChangeManager {
             } else {
                 ffa.getMapManager().setCurrentMap(mapname);
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    // if (!MapManager.getOnlineMapCache().contains(all.getWorld().getName())) {
-                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(FFA.getInstance().getMapManager().getCurrentMap()));
-                    //}
+                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
                 }
 
             }
             System.out.println("Changed map to: " + FFA.getInstance().getMapManager().getCurrentMap());
         } else
-            Bukkit.broadcastMessage(variables.getPrefix() + "§4§lNo map found or no online players!");
+            Bukkit.broadcastMessage(variables.getPrefix() + "§4§lNo map found!");
     }
 
     /**

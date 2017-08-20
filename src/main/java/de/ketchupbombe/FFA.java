@@ -7,6 +7,7 @@ import de.ketchupbombe.commands.MapsCommand;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.listeners.InventoryClickListener;
+import de.ketchupbombe.listeners.PlayerJoinListener;
 import de.ketchupbombe.manager.*;
 import de.ketchupbombe.utils.variables;
 import org.bukkit.Bukkit;
@@ -164,6 +165,7 @@ public class FFA extends JavaPlugin {
     private void init() {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new InventoryClickListener(), this);
+        pm.registerEvents(new PlayerJoinListener(), this);
 
         this.getCommand("ImportWorld").setExecutor(new ImportWorldCommand());
         this.getCommand("maps").setExecutor(new MapsCommand());
