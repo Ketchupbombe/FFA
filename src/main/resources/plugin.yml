@@ -2,3 +2,6 @@ name: FFA
 author: Ketchupbombe
 version: 1.0-SNAPSHOT
 main: de.ketchupbombe.FFA
+
+commands:
+  importworld:

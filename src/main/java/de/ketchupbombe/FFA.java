@@ -1,6 +1,7 @@
 package de.ketchupbombe;
 
 import de.ketchupbombe.MySQL.MySQL;
+import de.ketchupbombe.commands.ImportWorldCommand;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.manager.ConfigManager;
@@ -41,6 +42,9 @@ public class FFA extends JavaPlugin {
         //create configs
         configManager = new ConfigManager();
         configManager.setUpConfig();
+
+        //register commands and events
+        init();
 
         //register managers
         mapManager = new MapManager();
@@ -138,5 +142,12 @@ public class FFA extends JavaPlugin {
     private void createMySQLTables() {
         MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.LOCATION.getTablename() + " (type VARCHAR(64), worldname VARCHAR(64), location VARCHAR(255))");
         MySQL.updateAsync("CREATE TABLE IF NOT EXISTS " + MySQLTable.MAPS.getTablename() + " (mapname VARCHAR(64), author VARCHAR(64), online VARCHAR(7))");
+    }
+
+    /**
+     * Register all commands and listeners
+     */
+    private void init() {
+        this.getCommand("ImportWorld").setExecutor(new ImportWorldCommand());
     }
 }

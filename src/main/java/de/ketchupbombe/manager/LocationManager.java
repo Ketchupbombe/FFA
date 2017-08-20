@@ -184,12 +184,9 @@ public class LocationManager {
      * @param worldname world to import
      * @return boolean false if folder of world does not exist
      */
-    public boolean importWorld(String worldname) {
-        if (isFolderExist(worldname)) {
-            Bukkit.createWorld(new WorldCreator(worldname));
-            return true;
-        } else
-            return false;
+    public void importWorld(String worldname) {
+        Bukkit.createWorld(new WorldCreator(worldname));
+
     }
 
     /**
