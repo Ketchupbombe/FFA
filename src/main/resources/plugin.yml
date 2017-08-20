@@ -5,3 +5,5 @@ main: de.ketchupbombe.FFA
 
 commands:
   importworld:
+  maps:
+  ffareload:

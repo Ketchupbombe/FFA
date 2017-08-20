@@ -1,13 +1,12 @@
 package de.ketchupbombe;
 
 import de.ketchupbombe.MySQL.MySQL;
+import de.ketchupbombe.commands.FFAReloadCommand;
 import de.ketchupbombe.commands.ImportWorldCommand;
+import de.ketchupbombe.commands.MapsCommand;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
-import de.ketchupbombe.manager.ConfigManager;
-import de.ketchupbombe.manager.LocationManager;
-import de.ketchupbombe.manager.MapChangeManager;
-import de.ketchupbombe.manager.MapManager;
+import de.ketchupbombe.manager.*;
 import de.ketchupbombe.utils.variables;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -28,6 +27,7 @@ public class FFA extends JavaPlugin {
     private MapManager mapManager;
     private LocationManager locationManager;
     private MapChangeManager mapChangeManager;
+    private InventoryManager inventoryManager;
 
     @Override
     public void onEnable() {
@@ -58,6 +58,8 @@ public class FFA extends JavaPlugin {
             }
         }
         mapManager.updateMapCache();
+        inventoryManager = new InventoryManager();
+        inventoryManager.setUpMapsInv();
         //setup map
         if (mapChangeManager.isMapChangeEnabled()) {
             mapChangeManager.ChangeMapTo(mapManager.getRandomMap());
@@ -137,6 +139,16 @@ public class FFA extends JavaPlugin {
     }
 
     /**
+     * To manage inventorys
+     *
+     * @return new InventoryManager
+     * @see InventoryManager
+     */
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
+    /**
      * Create standart MySQL-tables in onEnable
      */
     private void createMySQLTables() {
@@ -149,5 +161,7 @@ public class FFA extends JavaPlugin {
      */
     private void init() {
         this.getCommand("ImportWorld").setExecutor(new ImportWorldCommand());
+        this.getCommand("maps").setExecutor(new MapsCommand());
+        this.getCommand("ffareload").setExecutor(new FFAReloadCommand());
     }
 }

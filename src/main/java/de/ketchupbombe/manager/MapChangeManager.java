@@ -38,7 +38,7 @@ public class MapChangeManager {
             }
             System.out.println("Changed map to: " + FFA.getInstance().getMapManager().getCurrentMap());
         } else
-            Bukkit.broadcastMessage(variables.getPrefix() + "§4§lNo Map found!");
+            Bukkit.broadcastMessage(variables.getPrefix() + "§4§lNo map found or no online players!");
     }
 
     /**

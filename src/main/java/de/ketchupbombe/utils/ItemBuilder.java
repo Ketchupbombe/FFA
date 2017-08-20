@@ -18,7 +18,7 @@ import java.util.List;
 public class ItemBuilder {
 
     private ItemStack is;
-    private ItemMeta im = is.getItemMeta();
+    private ItemMeta im;
     private List<String> lore = new ArrayList<>();
 
     /**
@@ -28,6 +28,7 @@ public class ItemBuilder {
      */
     public ItemBuilder(Material material) {
         this.is = new ItemStack(material);
+        this.im = this.is.getItemMeta();
     }
 
     /**
@@ -117,6 +118,7 @@ public class ItemBuilder {
      * @return created item
      */
     public ItemStack build() {
+        im.setLore(lore);
         is.setItemMeta(im);
 
         return is;
