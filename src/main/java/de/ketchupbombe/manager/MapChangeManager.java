@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 public class MapChangeManager {
 
+    private FFA ffa = FFA.getInstance();
+
     private int mapChangeSchedulerTime = FFA.getInstance().getConfig().getInt("MapChange.repatingTime");
     private boolean canChangeMap = true;
     private String followingMap = null;
@@ -18,20 +20,20 @@ public class MapChangeManager {
      * @param mapname map to switch
      */
     public void ChangeMapTo(String mapname) {
-        if (!FFA.getInstance().getMapManager().getOnlineMapCache().isEmpty() && Bukkit.getOnlinePlayers().size() != 0) {
+        if (!ffa.getMapManager().getOnlineMapCache().isEmpty() && Bukkit.getOnlinePlayers().size() != 0) {
             if (followingMap != null) {
-                FFA.getInstance().getMapManager().setCurrentMap(getFollowingMap());
+                ffa.getMapManager().setCurrentMap(getFollowingMap());
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.teleport(FFA.getInstance().getLocationManager().getSpawnLocationByWorld(getFollowingMap()));
+                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(getFollowingMap()));
 
                 }
 
                 setFollowingMap(null);
             } else {
-                FFA.getInstance().getMapManager().setCurrentMap(mapname);
+                ffa.getMapManager().setCurrentMap(mapname);
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     // if (!MapManager.getOnlineMapCache().contains(all.getWorld().getName())) {
-                    all.teleport(FFA.getInstance().getLocationManager().getSpawnLocationByWorld(FFA.getInstance().getMapManager().getCurrentMap()));
+                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(FFA.getInstance().getMapManager().getCurrentMap()));
                     //}
                 }
 
@@ -50,15 +52,15 @@ public class MapChangeManager {
             @Override
             public void run() {
                 mapChangeSchedulerTime--;
-                if (mapChangeSchedulerTime <= FFA.getInstance().getConfig().getInt("MapChange.cancleForcemapTime")) {
+                if (mapChangeSchedulerTime <= ffa.getConfig().getInt("MapChange.cancleForcemapTime")) {
                     if (canChangeMap == true) {
                         canChangeMap = false;
                     }
 
                 }
                 if (mapChangeSchedulerTime == 0) {
-                    ChangeMapTo(FFA.getInstance().getMapManager().getRandomMap());
-                    setMapChangeSchedulerTime(FFA.getInstance().getConfig().getInt("MapChange.repatingTime"));
+                    ChangeMapTo(ffa.getMapManager().getRandomMap());
+                    setMapChangeSchedulerTime(ffa.getConfig().getInt("MapChange.repatingTime"));
                     canChangeMap = true;
                 }
             }
