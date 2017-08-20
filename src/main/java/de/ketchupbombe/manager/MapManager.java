@@ -90,21 +90,18 @@ public class MapManager {
      * @return name of the creator
      */
     public String getAuthor(String mapname) {
-        String[] author = null;
         if (isMapExist(mapname)) {
-            FFA.getInstance().getExecutor().execute(() -> {
-                ResultSet rs = MySQL.getResult("SELECT * FROM " + MySQLTable.MAPS.getTablename() + " WHERE mapname='" + mapname + "'");
-                try {
-                    if (rs.next())
-                        author[0] = rs.getString("author");
-                } catch (SQLException e) {
-                }
+            ResultSet rs = MySQL.getResult("SELECT * FROM " + MySQLTable.MAPS.getTablename() + " WHERE mapname='" + mapname + "'");
+            try {
+                if (rs.next())
+                    return rs.getString("author");
+            } catch (SQLException e) {
+            }
 
-            });
         } else {
             return "This map does not exist!";
         }
-        return author[0];
+        return null;
     }
 
     /**

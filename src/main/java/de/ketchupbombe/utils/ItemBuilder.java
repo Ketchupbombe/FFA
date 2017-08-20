@@ -88,6 +88,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder block() {
+        variables.blockedClickedItems.add(is);
+        return this;
+    }
+
     /**
      * Add a enchantment to item
      *
