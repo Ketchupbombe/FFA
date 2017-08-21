@@ -7,7 +7,8 @@ package de.ketchupbombe.enums;
 public enum MySQLTable {
 
     LOCATION("FFA_Locations"),
-    MAPS("FFA_Maps");
+    MAPS("FFA_Maps"),
+    KIT("FFA_Kits");
 
     private String tablename;
 

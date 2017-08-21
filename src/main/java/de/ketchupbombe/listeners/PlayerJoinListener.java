@@ -18,6 +18,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         p.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
-
+        p.getInventory().setContents(ffa.getKitManager().getKitContents(ffa.getKitManager().getCurrentKit()));
+        p.getInventory().setArmorContents(ffa.getKitManager().getKitArmorKontents(ffa.getKitManager().getCurrentKit()));
     }
 }

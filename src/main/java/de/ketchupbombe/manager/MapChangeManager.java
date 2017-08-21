@@ -36,6 +36,7 @@ public class MapChangeManager {
                 }
 
             }
+            ffa.getKitManager().changeKit(ffa.getKitManager().getRandomKit());
             System.out.println("Changed map to: " + FFA.getInstance().getMapManager().getCurrentMap());
         } else
             Bukkit.broadcastMessage(variables.getPrefix() + "§4§lNo map found!");
