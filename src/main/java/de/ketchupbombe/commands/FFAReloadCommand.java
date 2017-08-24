@@ -20,6 +20,8 @@ public class FFAReloadCommand implements CommandExecutor {
             sender.sendMessage(variables.getPrefix() + "reloading FFA...");
             ffa.getMapManager().updateMapCache();
             ffa.getInventoryManager().setUpMapsInv();
+            ffa.getKitManager().updateKitCache();
+            ffa.getInventoryManager().setUpKitsInv();
 
             sender.sendMessage(variables.getPrefix() + "§aReload complete!");
         } else sender.sendMessage(variables.getNoPermission());

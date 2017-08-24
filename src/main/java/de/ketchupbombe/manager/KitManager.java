@@ -3,13 +3,21 @@ package de.ketchupbombe.manager;
 import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.enums.MySQLTable;
 import de.ketchupbombe.utils.ItemSerialization;
+import de.ketchupbombe.utils.variables;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -20,6 +28,15 @@ public class KitManager {
 
     private ArrayList<String> kitNamesCache = new ArrayList<>();
     private String currentKit;
+
+
+    public HashMap<Player, ItemStack[]> contents = new HashMap<>();
+    public HashMap<Player, ItemStack[]> armorContents = new HashMap<>();
+
+    public ArrayList<Player> waitingForKitname = new ArrayList<>();
+    public ArrayList<Player> creatingKit = new ArrayList<>();
+
+    public HashMap<Player, String> editingKit = new HashMap<>();
 
     /**
      * Save new kit in databes
@@ -46,9 +63,7 @@ public class KitManager {
     public void updatedKit(String kitname, ItemStack[] contents, ItemStack[] armorContents) {
         String dataContents = ItemSerialization.itemStackArrayToBase64(contents);
         String dataArmorContents = ItemSerialization.itemStackArrayToBase64(armorContents);
-        MySQL.updateAsync("UPDATE " + MySQLTable.KIT.getTablename()
-                + " SET contents='" + dataContents + "' AND armorContents='" + dataArmorContents
-                + "' WHERE kitname='" + kitname + "'");
+        MySQL.updateAsync("UPDATE " + MySQLTable.KIT.getTablename() + " SET contents='" + dataContents + "', armorContents='" + dataArmorContents + "' WHERE kitname='" + kitname + "'");
     }
 
     /**
@@ -69,6 +84,12 @@ public class KitManager {
         return null;
     }
 
+    /**
+     * Get armor contents of a kit which is stored in database
+     *
+     * @param kitname name of kit to get contents
+     * @return contents of specified kit
+     */
     public ItemStack[] getKitArmorKontents(String kitname) {
         ResultSet rs = MySQL.getResult("SELECT * FROM " + MySQLTable.KIT.getTablename() + " WHERE kitname='" + kitname + "'");
         try {
@@ -105,8 +126,7 @@ public class KitManager {
      */
     public void updateKitCache() {
         kitNamesCache.clear();
-        for (String kit : getKits()) {
-            ItemStack[] kitContents = getKitContents(kit);
+        for (String kit : this.getKits()) {
             kitNamesCache.add(kit);
         }
     }
@@ -156,6 +176,10 @@ public class KitManager {
         }
     }
 
+    public void deleteKit(String kitname) {
+        MySQL.updateAsync("DELETE FROM " + MySQLTable.KIT.getTablename() + " WHERE kitname='" + kitname + "'");
+    }
+
     /**
      * Get current playing kit
      *
@@ -163,6 +187,70 @@ public class KitManager {
      */
     public String getCurrentKit() {
         return currentKit;
+    }
+
+    /**
+     * Start a new creation from a kit
+     *
+     * @param p Player who starts
+     */
+    public void setCreate(Player p) {
+        p.getInventory().clear();
+        p.getInventory().setArmorContents(null);
+        p.setGameMode(GameMode.CREATIVE);
+        p.sendMessage(variables.getPrefix() + "Now build your new Kit!");
+        p.sendMessage(variables.getPrefix() + "Click below to go on if you have finished!");
+        this.creatingKit.add(p);
+
+        TextComponent accept = new TextComponent("SAVE KIT");
+        accept.setColor(ChatColor.GREEN);
+        accept.setBold(true);
+        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder("Save the current build kit!").create()));
+        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kit accept"));
+        p.spigot().sendMessage(accept);
+
+        TextComponent abord = new TextComponent("CANCEL KIT CREATE");
+        abord.setColor(ChatColor.RED);
+        abord.setBold(true);
+        abord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder("Delete current createing kit").create()));
+        abord.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kit abord"));
+        p.spigot().sendMessage(abord);
+
+    }
+
+    /**
+     * Start editing a kit
+     *
+     * @param p       Player who is editing the kit
+     * @param kitname kit to edit
+     */
+    public void setEditKit(Player p, String kitname) {
+        p.setGameMode(GameMode.CREATIVE);
+        p.getInventory().setContents(this.getKitContents(kitname));
+        p.getInventory().setArmorContents(this.getKitArmorKontents(kitname));
+        this.editingKit.put(p, kitname);
+
+        p.sendMessage(variables.getPrefix() + "Now you can edit this kit!");
+        p.sendMessage(variables.getPrefix() + "Click below to go on if you have finished!");
+
+        TextComponent accept = new TextComponent("SAVE KIT");
+        accept.setColor(ChatColor.GREEN);
+        accept.setBold(true);
+        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder("Save the current build kit!").create()));
+        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kit accept"));
+        p.spigot().sendMessage(accept);
+
+        TextComponent abord = new TextComponent("CANCEL KIT EDITING");
+        abord.setColor(ChatColor.RED);
+        abord.setBold(true);
+        abord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder("Delete current createing kit").create()));
+        abord.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kit abord"));
+        p.spigot().sendMessage(abord);
+
     }
 
 }

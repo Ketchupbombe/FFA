@@ -23,6 +23,10 @@ public class InventoryClickListener implements Listener {
             try {
                 // define current map
                 String currentOpenMap = e.getInventory().getTitle().substring(2);
+                String currentOpenKit = null;
+                if (e.getInventory().getTitle().length() >= 10) {
+                    currentOpenKit = e.getInventory().getTitle().substring(9);
+                }
                 if (variables.blockedClickedItems.contains(e.getCurrentItem())) {
                     e.setCancelled(true);
                 }
@@ -86,6 +90,55 @@ public class InventoryClickListener implements Listener {
                             p.sendMessage(variables.getPrefix() + "Changed the map to §6" + currentOpenMap);
                         } else p.sendMessage(variables.getPrefix() + "§cYou can't change the map!");
                     } else p.sendMessage(variables.getPrefix() + "§cThis map is not online!");
+                }
+
+                /*
+                =====KITS=====
+                 */
+
+                // Create new Kit Item
+                if (e.getInventory().getTitle().equalsIgnoreCase("§eKits")) {
+                    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4Create new Kit")) {
+                        p.closeInventory();
+                        ffa.getKitManager().setCreate(p);
+                    }
+                    // Get clicked kit
+                    String clickedKit = null;
+                    for (String kits : ffa.getKitManager().getKitNamesCache()) {
+                        if (e.getCurrentItem().getItemMeta().getDisplayName().contains(kits)) {
+                            clickedKit = kits;
+                        }
+                    }
+                    // Open clicked kit
+                    if (clickedKit != null) {
+                        p.openInventory(ffa.getInventoryManager().createKitsInv(clickedKit));
+                    }
+                }
+                if (e.getInventory().getTitle().contains("Kit:")) {
+                    // Forcekit Item
+                    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§3Forcekit")) {
+                        p.closeInventory();
+                        if (!ffa.getKitManager().getCurrentKit().equalsIgnoreCase(currentOpenKit)) {
+                            ffa.getKitManager().changeKit(currentOpenKit);
+                            p.sendMessage(variables.getPrefix() + "Changed kit to:§6 " + currentOpenKit);
+                        } else p.sendMessage(variables.getPrefix() + "§cThis kit is already in use!");
+                    }
+                    // Deltekit Item
+                    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§4§lDELETE KIT")) {
+                        p.closeInventory();
+                        if (ffa.getKitManager().isKitExist(currentOpenKit)) {
+                            ffa.getKitManager().deleteKit(currentOpenKit);
+                            p.sendMessage(variables.getPrefix() + "§4You deleted kit:§6 " + currentOpenKit);
+                            p.sendMessage(variables.getPrefix() + "Please use §a/ffareload");
+                        } else p.sendMessage(variables.getPrefix() + "This kit does already not exist!");
+                    }
+                    // Editkit Item
+                    if (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§3Edit kit")) {
+                        p.closeInventory();
+                        if (ffa.getKitManager().isKitExist(currentOpenKit)) {
+                            ffa.getKitManager().setEditKit(p, currentOpenKit);
+                        } else p.sendMessage(variables.getPrefix() + "This kit does not exist!");
+                    }
                 }
 
             } catch (NullPointerException ex) {

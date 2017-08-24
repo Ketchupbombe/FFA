@@ -4,6 +4,7 @@ import de.ketchupbombe.MySQL.MySQL;
 import de.ketchupbombe.commands.*;
 import de.ketchupbombe.enums.LocationType;
 import de.ketchupbombe.enums.MySQLTable;
+import de.ketchupbombe.listeners.AsynchPlayerChatListener;
 import de.ketchupbombe.listeners.InventoryClickListener;
 import de.ketchupbombe.listeners.PlayerJoinListener;
 import de.ketchupbombe.manager.*;
@@ -67,6 +68,7 @@ public class FFA extends JavaPlugin {
         mapManager.updateMapCache();
         inventoryManager = new InventoryManager();
         inventoryManager.setUpMapsInv();
+        inventoryManager.setUpKitsInv();
 
         //setup map
         if (mapChangeManager.isMapChangeEnabled()) {
@@ -182,14 +184,21 @@ public class FFA extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new InventoryClickListener(), this);
         pm.registerEvents(new PlayerJoinListener(), this);
+        pm.registerEvents(new AsynchPlayerChatListener(), this);
 
         this.getCommand("ImportWorld").setExecutor(new ImportWorldCommand());
         this.getCommand("maps").setExecutor(new MapsCommand());
         this.getCommand("ffareload").setExecutor(new FFAReloadCommand());
         this.getCommand("forcemap").setExecutor(new ForceMapCommand());
         this.getCommand("forcekit").setExecutor(new ForceKitCommand());
+        this.getCommand("kits").setExecutor(new KitsCommand());
+        this.getCommand("kit").setExecutor(new KitCommand());
     }
 
+    /**
+     * Create a standard kit on enabling this plugin!
+     * This kit can be edited ingame.
+     */
     private void createStandardKit() {
         if (!getKitManager().isKitExist("Standard")) {
             getKitManager().createNewKit("Standard", ItemSerialization.itemStackArrayFromBase64(
