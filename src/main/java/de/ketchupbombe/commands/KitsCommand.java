@@ -19,6 +19,12 @@ public class KitsCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender.hasPermission("ffa.command.maps.admin") && sender instanceof Player) {
             Player p = (Player) sender;
+            if (ffa.getKitManager().editingKit.containsKey(p)
+                    || ffa.getKitManager().creatingKit.contains(p)
+                    || ffa.getKitManager().waitingForKitname.contains(p)) {
+                p.sendMessage(variables.getPrefix() + "You must finish your creating/editing kit process!");
+                return true;
+            }
             p.openInventory(ffa.getInventoryManager().kitsInv);
         } else {
             for (String kitnames : ffa.getKitManager().getKitNamesCache()) {

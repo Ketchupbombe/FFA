@@ -25,6 +25,12 @@ public class KitCommand implements CommandExecutor {
                 if (args.length == 1) {
                     // create new Kit
                     if (args[0].equalsIgnoreCase("create")) {
+                        if (ffa.getKitManager().editingKit.containsKey(p)
+                                || ffa.getKitManager().creatingKit.contains(p)
+                                || ffa.getKitManager().waitingForKitname.contains(p)) {
+                            p.sendMessage(variables.getPrefix() + "You must finish your creating/editing kit process!");
+                            return true;
+                        }
                         ffa.getKitManager().setCreate(p);
 
                         // accept kit creating or editing
@@ -36,10 +42,6 @@ public class KitCommand implements CommandExecutor {
                             ffa.getKitManager().waitingForKitname.add(p);
 
 
-                            p.setGameMode(GameMode.SURVIVAL);
-                            p.getInventory().clear();
-                            p.getInventory().setContents(ffa.getKitManager().getKitContents(ffa.getKitManager().getCurrentKit()));
-                            p.getInventory().setArmorContents(ffa.getKitManager().getKitArmorKontents(ffa.getKitManager().getCurrentKit()));
 
                             p.sendMessage(variables.getPrefix() + "§lPlease enter now the name of the Kit in chat!");
                         }
@@ -50,6 +52,7 @@ public class KitCommand implements CommandExecutor {
                             p.setGameMode(GameMode.SURVIVAL);
                             p.getInventory().setContents(ffa.getKitManager().getKitContents(ffa.getKitManager().getCurrentKit()));
                             p.getInventory().setArmorContents(ffa.getKitManager().getKitArmorKontents(ffa.getKitManager().getCurrentKit()));
+                            p.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
 
                             p.sendMessage(variables.getPrefix() + "You edited the kit!");
                         }
@@ -63,6 +66,7 @@ public class KitCommand implements CommandExecutor {
                             p.getInventory().clear();
                             p.getInventory().setContents(ffa.getKitManager().getKitContents(ffa.getKitManager().getCurrentKit()));
                             p.getInventory().setArmorContents(ffa.getKitManager().getKitArmorKontents(ffa.getKitManager().getCurrentKit()));
+                            p.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
                         }
                         if (ffa.getKitManager().editingKit.containsKey(p)) {
                             ffa.getKitManager().editingKit.remove(p);
@@ -71,11 +75,18 @@ public class KitCommand implements CommandExecutor {
                             p.getInventory().clear();
                             p.getInventory().setContents(ffa.getKitManager().getKitContents(ffa.getKitManager().getCurrentKit()));
                             p.getInventory().setArmorContents(ffa.getKitManager().getKitArmorKontents(ffa.getKitManager().getCurrentKit()));
+                            p.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
                         }
                     }
                     // edit kit with command
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("edit")) {
+                        if (ffa.getKitManager().editingKit.containsKey(p)
+                                || ffa.getKitManager().creatingKit.contains(p)
+                                || ffa.getKitManager().waitingForKitname.contains(p)) {
+                            p.sendMessage(variables.getPrefix() + "You must finish your creating/editing kit process!");
+                            return true;
+                        }
                         String kitname = args[1];
                         if (ffa.getKitManager().isKitExist(kitname)) {
                             ffa.getKitManager().setEditKit(p, kitname);

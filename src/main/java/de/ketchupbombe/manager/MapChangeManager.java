@@ -24,7 +24,13 @@ public class MapChangeManager {
             if (followingMap != null) {
                 ffa.getMapManager().setCurrentMap(getFollowingMap());
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(getFollowingMap()));
+                    if (ffa.getKitManager().editingKit.containsKey(all)
+                            || ffa.getKitManager().creatingKit.contains(all)
+                            || ffa.getKitManager().waitingForKitname.contains(all)) {
+                        all.sendMessage(variables.getPrefix() + "You must finish your creating/editing kit process " +
+                                "before you can be teleported to another map!");
+                    } else
+                        all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(getFollowingMap()));
 
                 }
 
@@ -32,7 +38,13 @@ public class MapChangeManager {
             } else {
                 ffa.getMapManager().setCurrentMap(mapname);
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
+                    if (ffa.getKitManager().editingKit.containsKey(all)
+                            || ffa.getKitManager().creatingKit.contains(all)
+                            || ffa.getKitManager().waitingForKitname.contains(all)) {
+                        all.sendMessage(variables.getPrefix() + "You must finish your creating/editing kit process " +
+                                "before you can be teleported to another map!");
+                    } else
+                        all.teleport(ffa.getLocationManager().getSpawnLocationByWorld(ffa.getMapManager().getCurrentMap()));
                 }
 
             }

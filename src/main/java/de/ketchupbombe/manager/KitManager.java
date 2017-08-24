@@ -169,8 +169,13 @@ public class KitManager {
         if (isKitExist(kitname)) {
             currentKit = kitname;
             for (Player all : Bukkit.getOnlinePlayers()) {
-                all.getInventory().setContents(getKitContents(kitname));
-                all.getInventory().setArmorContents(getKitArmorKontents(kitname));
+                if (this.editingKit.containsKey(all)
+                        || this.creatingKit.contains(all)
+                        || this.waitingForKitname.contains(all)) {
+                } else {
+                    all.getInventory().setContents(getKitContents(kitname));
+                    all.getInventory().setArmorContents(getKitArmorKontents(kitname));
+                }
             }
             System.out.println("Changed kit to: " + kitname);
         }
